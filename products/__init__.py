@@ -9,18 +9,13 @@ class Product:
         self.cost = cost
         self.qty = qty
 
+    @staticmethod
     def load(data):
         return Product(data['id'], data['name'], data['description'], data['cost'], data['qty'])
 
 
 def list_products() -> list[Product]:
-    products = dao.list_products()
-    result = []
-    for product in products:
-        result.append(Product.load(product))
-    
-    return result
-
+    return [Product.load(product) for product in dao.list_products()]
 
 
 def get_product(product_id: int) -> Product:
@@ -28,6 +23,8 @@ def get_product(product_id: int) -> Product:
 
 
 def add_product(product: dict):
+    if 'id' not in product or 'name' not in product or 'description' not in product or 'cost' not in product:
+        raise ValueError("Product dictionary is missing required fields")
     dao.add_product(product)
 
 
